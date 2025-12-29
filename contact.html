@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact — Underground Garden Events</title>
+  <meta name="description" content="Contact Underground Garden Events." />
+
+  <style>
+    :root{
+      --bg:#000;
+      --fg:#fff;
+      --muted: rgba(255,255,255,.72);
+      --muted2: rgba(255,255,255,.55);
+      --stroke: rgba(255,255,255,.18);
+      --stroke2: rgba(255,255,255,.28);
+      --pad: 22px;
+      --radius: 18px;
+      --mono: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --ls: .18em;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--mono);
+    }
+
+    /* subtle grid texture */
+    .noise{
+      position: fixed;
+      inset: 0;
+      pointer-events:none;
+      background:
+        linear-gradient(to right, rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: .16;
+      mask-image: radial-gradient(900px 500px at 40% 10%, #000 50%, transparent 100%);
+    }
+
+    a{ color: var(--fg); }
+    a:focus-visible{
+      outline: 2px solid rgba(255,255,255,.9);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .bar{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px var(--pad);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .logo{
+      display:inline-flex;
+      align-items:center;
+      text-decoration:none;
+    }
+    .logo img{
+      height: 38px;
+      width: auto;
+      display:block;
+    }
+
+    nav{
+      display:flex;
+      gap: 14px;
+      align-items:center;
+      flex-wrap: wrap;
+      justify-content:flex-end;
+    }
+    nav a{
+      text-decoration:none;
+      text-transform: uppercase;
+      letter-spacing: var(--ls);
+      font-size: 12px;
+      opacity: .92;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    nav a:hover{
+      opacity: 1;
+      border-color: var(--stroke2);
+    }
+    nav a[aria-current="page"]{
+      border-color: rgba(255,255,255,.65);
+      opacity: 1;
+    }
+
+    main{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px var(--pad) 64px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items:start;
+      margin-top: 18px;
+    }
+
+    .panel{
+      border: 1px solid var(--stroke2);
+      border-radius: var(--radius);
+      padding: 22px;
+      background: rgba(255,255,255,.02);
+    }
+
+    h1{
+      margin: 0 0 10px 0;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: .02em;
+      line-height: 1.05;
+      text-transform: uppercase;
+    }
+    .sub{
+      margin: 0 0 18px 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      max-width: 60ch;
+    }
+
+    .icon{
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: 0 0 auto;
+    }
+
+    .btnRow{
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items:center;
+      margin-top: 14px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.85);
+      text-decoration:none;
+      text-transform: uppercase;
+      letter-spacing: var(--ls);
+      font-size: 12px;
+      line-height: 1;
+      background: transparent;
+      transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+      user-select: none;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      background: #fff;
+      color: #000;
+      border-color: #fff;
+    }
+    .btn.secondary{
+      border-color: var(--stroke2);
+      color: var(--fg);
+      background: transparent;
+    }
+    .btn.secondary:hover{
+      background: rgba(255,255,255,.08);
+      color: var(--fg);
+      border-color: rgba(255,255,255,.65);
+    }
+
+    .list{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .item{
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 14px;
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      text-decoration:none;
+      color: var(--fg);
+      transition: border-color .15s ease, transform .15s ease, background .15s ease;
+      background: rgba(255,255,255,.01);
+    }
+    .item:hover{
+      border-color: rgba(255,255,255,.55);
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.03);
+    }
+
+    .item .left{
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+      min-width: 0;
+    }
+    .item .meta{
+      min-width: 0;
+    }
+    .item .title{
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: var(--ls);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+    .item .desc{
+      margin: 6px 0 0 0;
+      color: var(--muted2);
+      font-size: 13px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .chev{
+      margin-top: 2px;
+      opacity: .9;
+    }
+
+    /* Form */
+    form{
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    label{
+      text-transform: uppercase;
+      letter-spacing: var(--ls);
+      font-size: 11px;
+      color: var(--muted);
+      display:block;
+      margin-bottom: 6px;
+    }
+
+    input, textarea{
+      width: 100%;
+      background: transparent;
+      color: var(--fg);
+      border: 1px solid var(--stroke2);
+      border-radius: 14px;
+      padding: 12px 12px;
+      font-size: 14px;
+      outline: none;
+    }
+    textarea{ min-height: 140px; resize: vertical; }
+
+    input:focus, textarea:focus{
+      border-color: rgba(255,255,255,.75);
+    }
+
+    .hint{
+      margin: 10px 0 0 0;
+      color: var(--muted2);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- EDIT THESE (only 3) -->
+  <script>
+    const CONTACT_EMAIL = "andy.artime@ugevents.com"; // change to your real email
+    const INSTAGRAM_URL = "https://instagram.com/undergroundgardenevents";            // change to your IG
+    const SHOTGUN_URL   = "https://shotgun.live/en/venues/underground-garden-events";
+  </script>
+
+  <header>
+    <div class="bar">
+      <a class="logo" href="index.html" aria-label="Underground Garden Events home">
+        <img src="assets/uglogo.png" alt="Underground Garden Events logo" />
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <a href="shop.html">Shop</a>
+        <a href="events.html">Events</a>
+        <a href="contact.html" aria-current="page">Contact Us</a>
+        <a href="links.html">Links</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h1>Contact</h1>
+      <p class="sub">
+        Fastest response: email or Instagram DM.
+        For ticketed events, Shotgun is the source of truth.
+      </p>
+
+      <div class="btnRow">
+        <a id="emailBtn" class="btn" href="#">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 6h16v12H4z"></path>
+            <path d="M4 7l8 6 8-6"></path>
+          </svg>
+          Email
+        </a>
+
+        <a id="igBtn" class="btn secondary" href="#" target="_blank" rel="noopener noreferrer">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Z"></path>
+            <path d="M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z"></path>
+            <path d="M17.6 6.4h.01"></path>
+          </svg>
+          Instagram
+        </a>
+
+        <a id="shotgunBtn" class="btn secondary" href="#" target="_blank" rel="noopener noreferrer">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 17L17 7"></path>
+            <path d="M9 7h8v8"></path>
+          </svg>
+          Shotgun
+        </a>
+      </div>
+    </section>
+
+    <section class="grid">
+      <!-- Left: quick links -->
+      <div class="panel">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px;">
+          <h2 style="margin:0; text-transform:uppercase; letter-spacing:var(--ls); font-size:14px;">Quick channels</h2>
+          <span style="color:var(--muted2); font-size:12px; letter-spacing:var(--ls); text-transform:uppercase;">B/W only</span>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <ul class="list">
+          <li>
+            <a class="item" id="emailCard" href="#">
+              <div class="left">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 6h16v12H4z"></path>
+                  <path d="M4 7l8 6 8-6"></path>
+                </svg>
+                <div class="meta">
+                  <p class="title">Email</p>
+                  <p class="desc" id="emailText"></p>
+                </div>
+              </div>
+              <svg class="icon chev" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 18l6-6-6-6"></path>
+              </svg>
+            </a>
+          </li>
+
+          <li>
+            <a class="item" id="igCard" href="#" target="_blank" rel="noopener noreferrer">
+              <div class="left">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Z"></path>
+                  <path d="M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z"></path>
+                  <path d="M17.6 6.4h.01"></path>
+                </svg>
+                <div class="meta">
+                  <p class="title">Instagram</p>
+                  <p class="desc">DMs open — fastest for collabs & questions.</p>
+                </div>
+              </div>
+              <svg class="icon chev" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 18l6-6-6-6"></path>
+              </svg>
+            </a>
+          </li>
+
+          <li>
+            <a class="item" id="shotgunCard" href="#" target="_blank" rel="noopener noreferrer">
+              <div class="left">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 17L17 7"></path>
+                  <path d="M9 7h8v8"></path>
+                </svg>
+                <div class="meta">
+                  <p class="title">Shotgun</p>
+                  <p class="desc">Tickets / tiers / updates live here when events drop.</p>
+                </div>
+              </div>
+              <svg class="icon chev" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 18l6-6-6-6"></path>
+              </svg>
+            </a>
+          </li>
+        </ul>
+
+        <p class="hint">
+          Want ultra-low maintenance? Keep this page as “links + email”.
+          If you want a real form, Netlify can capture submissions with zero backend (see next panel).
+        </p>
+      </div>
+
+      <!-- Right: form (Netlify-ready + mailto fallback) -->
+      <div class="panel">
+        <h2 style="margin:0; text-transform:uppercase; letter-spacing:var(--ls); font-size:14px;">Send a message</h2>
+        <p class="sub" style="margin-top:10px;">
+          This form is optional. If you host on Netlify, it can store submissions automatically.
+          Otherwise it still works as a mailto fallback button.
+        </p>
+
+        <!-- Netlify form support:
+             1) Keep netlify + name attributes
+             2) Netlify will detect and capture submissions on deploy
+        -->
+        <form name="contact" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="contact" />
+
+          <div>
+            <label for="name">Name</label>
+            <input id="name" name="name" autocomplete="name" placeholder="Your name" />
+          </div>
+
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@domain.com" />
+          </div>
+
+          <div>
+            <label for="topic">Topic</label>
+            <input id="topic" name="topic" placeholder="Booking / Sponsorship / Vendor / General" />
+          </div>
+
+          <div>
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Tell us what you’re building. Keep it raw."></textarea>
+          </div>
+
+          <div class="btnRow">
+            <button class="btn" type="submit" style="cursor:pointer;">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 2L11 13"></path>
+                <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+              </svg>
+              Submit
+            </button>
+
+            <a id="mailtoFallback" class="btn secondary" href="#">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 6h16v12H4z"></path>
+                <path d="M4 7l8 6 8-6"></path>
+              </svg>
+              Email instead
+            </a>
+          </div>
+        </form>
+
+        <p class="hint">
+          If Netlify form handling isn’t enabled, “Submit” may do nothing useful — use “Email instead”.
+        </p>
+      </div>
+    </section>
+
+    <script>
+      // Wire up links in one place
+      const email = CONTACT_EMAIL;
+      const mailto = `mailto:${email}?subject=${encodeURIComponent("Underground Garden Events — Inquiry")}`;
+
+      document.getElementById("emailBtn").href = mailto;
+      document.getElementById("emailCard").href = mailto;
+      document.getElementById("mailtoFallback").href = mailto;
+      document.getElementById("emailText").textContent = email;
+
+      document.getElementById("igBtn").href = INSTAGRAM_URL;
+      document.getElementById("igCard").href = INSTAGRAM_URL;
+
+      document.getElementById("shotgunBtn").href = SHOTGUN_URL;
+      document.getElementById("shotgunCard").href = SHOTGUN_URL;
+    </script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Events — Underground Garden Events</title>
+  <meta name="description" content="Upcoming events by Underground Garden Events." />
+
+  <style>
+    :root{
+      --bg:#000;
+      --fg:#fff;
+      --muted: rgba(255,255,255,.72);
+      --muted2: rgba(255,255,255,.55);
+      --stroke: rgba(255,255,255,.18);
+      --stroke2: rgba(255,255,255,.28);
+      --pad: 22px;
+      --radius: 18px;
+      --mono: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --ls: .18em;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--mono);
+    }
+
+    /* Subtle grid texture (edgy, not corporate) */
+    .noise{
+      position: fixed;
+      inset: 0;
+      pointer-events:none;
+      background:
+        linear-gradient(to right, rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: .16;
+      mask-image: radial-gradient(900px 500px at 40% 10%, #000 50%, transparent 100%);
+    }
+
+    a{ color: var(--fg); }
+    a:focus-visible{
+      outline: 2px solid rgba(255,255,255,.9);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .bar{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px var(--pad);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .logo{
+      display:inline-flex;
+      align-items:center;
+      gap: 12px;
+      text-decoration:none;
+    }
+    .logo img{
+      height: 38px;
+      width: auto;
+      display:block;
+    }
+
+    nav{
+      display:flex;
+      gap: 14px;
+      align-items:center;
+      flex-wrap: wrap;
+      justify-content:flex-end;
+    }
+    nav a{
+      text-decoration:none;
+      text-transform: uppercase;
+      letter-spacing: var(--ls);
+      font-size: 12px;
+      opacity: .92;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    nav a:hover{
+      opacity: 1;
+      border-color: var(--stroke2);
+    }
+    nav a[aria-current="page"]{
+      border-color: rgba(255,255,255,.65);
+      opacity: 1;
+    }
+
+    main{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px var(--pad) 60px;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+      align-items: start;
+      margin-top: 18px;
+    }
+
+    .panel{
+      border: 1px solid var(--stroke2);
+      border-radius: var(--radius);
+      padding: 22px;
+      background: rgba(255,255,255,.02);
+    }
+
+    h1{
+      margin: 0 0 10px 0;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: .02em;
+      line-height: 1.05;
+      text-transform: uppercase;
+    }
+    .sub{
+      margin: 0 0 18px 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      max-width: 60ch;
+    }
+
+    .ctaRow{
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items:center;
+      margin-top: 14px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.85);
+      text-decoration:none;
+      text-transform: uppercase;
+      letter-spacing: var(--ls);
+      font-size: 12px;
+      line-height: 1;
+      background: transparent;
+      transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+      user-select: none;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      background: #fff;
+      color: #000;
+      border-color: #fff;
+    }
+
+    .btn.secondary{
+      border-color: var(--stroke2);
+      color: var(--fg);
+      background: transparent;
+    }
+    .btn.secondary:hover{
+      background: rgba(255,255,255,.08);
+      color: var(--fg);
+      border-color: rgba(255,255,255,.65);
+      transform: translateY(-1px);
+    }
+
+    .icon{
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: 0 0 auto;
+    }
+
+    .status{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .status .tag{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      width: fit-content;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke2);
+      text-transform: uppercase;
+      letter-spacing: var(--ls);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .status .note{
+      margin: 0;
+      color: var(--muted2);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .embedWrap{
+      margin-top: 18px;
+      border: 1px solid var(--stroke2);
+      border-radius: var(--radius);
+      overflow:hidden;
+      background: rgba(255,255,255,.02);
+    }
+    .embedTop{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--stroke);
+    }
+    .embedTop .label{
+      text-transform: uppercase;
+      letter-spacing: var(--ls);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .embedTop .mini{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      opacity: .9;
+      text-decoration:none;
+      border: 1px solid var(--stroke2);
+      padding: 8px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: var(--ls);
+      font-size: 11px;
+    }
+    .embedTop .mini:hover{
+      border-color: rgba(255,255,255,.7);
+      opacity: 1;
+    }
+
+    iframe{
+      width: 100%;
+      height: 640px;
+      border: 0;
+      background: #000;
+    }
+
+    .tiny{
+      margin-top: 10px;
+      color: var(--muted2);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 860px){
+      .hero{ grid-template-columns: 1fr; }
+      iframe{ height: 720px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!--
+    STEP 1 (IMPORTANT): paste your Shotgun organizer/events URL below.
+    Example formats vary, so just paste the exact URL Shotgun gives you for your organizer page.
+  -->
+  <script>
+    const SHOTGUN_URL = "https://shotgun.live/en/venues/underground-garden-events";
+  </script>
+
+  <header>
+    <div class="bar">
+      <a class="logo" href="index.html" aria-label="Underground Garden Events home">
+        <img src="assets/uglogo.png" alt="Underground Garden Events logo" />
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <a href="shop.html">Shop</a>
+        <a href="events.html" aria-current="page">Events</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="links.html">Links</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="panel">
+        <h1>Events</h1>
+        <p class="sub">
+          We keep this page intentionally low-maintenance.
+          When tickets go live, everything runs through Shotgun — fast checkout, mobile tickets, zero hassle.
+        </p>
+
+        <div class="ctaRow">
+          <a id="shotgunBtn" class="btn" href="#" target="_blank" rel="noopener noreferrer">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 17L17 7"></path>
+              <path d="M9 7h8v8"></path>
+            </svg>
+            View on Shotgun
+          </a>
+
+          <a class="btn secondary" href="contact.html">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6h16v12H4z"></path>
+              <path d="M4 7l8 6 8-6"></path>
+            </svg>
+            Booking / Questions
+          </a>
+        </div>
+
+        <p class="tiny">
+          Pro tip: Shotgun has an “Event Listing Widget” and “Event Widget” you can generate in Shotgun and embed on your site if you want the feed fully native. :contentReference[oaicite:1]{index=1}
+        </p>
+      </div>
+
+      <div class="panel status">
+        <div class="tag">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 21s7-4.4 7-11a7 7 0 0 0-14 0c0 6.6 7 11 7 11z"></path>
+            <path d="M12 10.5h.01"></path>
+          </svg>
+          No events posted (yet)
+        </div>
+
+        <p class="note">
+          When we announce the next one, the Shotgun link becomes your single source of truth:
+          lineup, tickets, tiers, and updates.
+        </p>
+
+        <p class="note">
+          If you want, this page can also embed your organizer page below as a “preview” so people can browse without leaving.
+        </p>
+      </div>
+    </section>
+
+    <!-- Optional preview embed -->
+    <section class="embedWrap" id="embedWrap" style="display:none;">
+      <div class="embedTop">
+        <div class="label">Preview</div>
+        <a id="shotgunMini" class="mini" href="#" target="_blank" rel="noopener noreferrer">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 17L17 7"></path>
+            <path d="M9 7h8v8"></path>
+          </svg>
+          Open in Shotgun
+        </a>
+      </div>
+
+      <!--
+        Most low-maintenance preview: iframe the organizer/events page.
+        If Shotgun blocks framing for your specific URL, just keep the button-only approach above.
+      -->
+      <iframe id="shotgunFrame" title="Shotgun events preview" loading="lazy" referrerpolicy="no-referrer"></iframe>
+    </section>
+
+    <script>
+      // Minimal setup: if you paste a real URL, the button + embed auto-wire.
+      const isReal = SHOTGUN_URL && !SHOTGUN_URL.includes("https://shotgun.live/en/venues/underground-garden-events");
+
+      const btn = document.getElementById("shotgunBtn");
+      const mini = document.getElementById("shotgunMini");
+      const wrap = document.getElementById("embedWrap");
+      const frame = document.getElementById("shotgunFrame");
+
+      if (isReal) {
+        btn.href = SHOTGUN_URL;
+        mini.href = SHOTGUN_URL;
+
+        // Enable preview embed
+        wrap.style.display = "block";
+        frame.src = SHOTGUN_URL;
+      } else {
+        // Fallback: safe placeholder behavior
+        btn.href = "https://shotgun.live/en/venues/underground-garden-events";
+        mini.href = "https://shotgun.live/en/venues/underground-garden-events";
+      }
+    </script>
+  </main>
+</body>
+</html>
